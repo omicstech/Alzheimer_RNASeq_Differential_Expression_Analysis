@@ -1,0 +1,17 @@
+# R session files
+.RData
+.Rhistory
+.Rproj.user
+
+# Raw sequencing data
+data/
+
+# Large alignment files
+alignment/
+
+# Temporary files
+*.log
+*.tmp
+
+# Reports will be added later
+reports/
