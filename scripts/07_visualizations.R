@@ -16,7 +16,7 @@ library(RColorBrewer)
 setwd("~/Ngs_analysis/Alzheimer_RNASeq_Differential_Expression_Analysis")
 
 # Read results
-results <- read.csv("Final_Results/final_results_with_symbols.csv")
+results <- read.csv("results/DEGs_with_gene_symbols.csv")
 
 # ============================================
 # 1. VOLCANO PLOT
