@@ -3,8 +3,9 @@
 .Rhistory
 .Rproj.user
 
-# Raw sequencing data
-data/
+# Raw sequencing data and reference genome (large)
+data/raw_fastq/
+data/reference/
 
 # Large alignment files
 alignment/
@@ -12,6 +13,3 @@ alignment/
 # Temporary files
 *.log
 *.tmp
-
-# Reports will be added later
-reports/
