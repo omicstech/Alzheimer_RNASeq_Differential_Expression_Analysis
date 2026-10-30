@@ -37,7 +37,7 @@ volcano <- ggplot(results, aes(x = log2FoldChange, y = -log10(padj), color = sig
   theme_minimal() +
   theme(legend.position = "bottom")
 
-ggsave("figures/volcano_plot.png", volcano, width = 8, height = 6, dpi = 300)
+ggsave("figures/Volcano_Plot.png", volcano, width = 8, height = 6, dpi = 300)
 
 # ============================================
 # 2. MA PLOT
@@ -59,8 +59,9 @@ ggsave("figures/ma_plot.png", ma_plot, width = 8, height = 6, dpi = 300)
 # 3. TOP GENES BAR PLOT
 # ============================================
 
-top_up <- head(results[order(-results$log2FoldChange), ], 10)
-top_down <- head(results[order(results$log2FoldChange), ], 10)
+sig <- results[which(results$padj < 0.05), ]
+top_up <- head(sig[order(-sig$log2FoldChange), ], 10)
+top_down <- head(sig[order(sig$log2FoldChange), ], 10)
 top_genes <- rbind(top_up, top_down)
 
 bar_plot <- ggplot(top_genes, aes(x = reorder(symbol, log2FoldChange), y = log2FoldChange, fill = log2FoldChange > 0)) +

@@ -1,5 +1,9 @@
-Sample_ID,Group
-SRR8482664,Control
-SRR8482665,Control
-SRR8482727,AD
-SRR8482728,AD
+Sample_ID,Group,Age,Sex
+SRR8482664,AD,82,female
+SRR8482665,AD,77,female
+SRR8482727,AD,86,female
+SRR8482728,AD,86,female
+SRR8482739,Control,82,female
+SRR8482631,Control,78,female
+SRR8482734,Control,86,female
+SRR8482685,Control,85,female
