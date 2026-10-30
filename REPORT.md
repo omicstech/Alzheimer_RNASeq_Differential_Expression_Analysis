@@ -1,124 +1,80 @@
-# Alzheimer RNA-Seq Differential Expression Analysis - Study Report
+# Alzheimer RNA-seq Analiz Raporu
 
-## 1. Objective
+## 1. Amaç
 
-This study examines differences in gene expression levels using RNA-Seq
-data from individuals diagnosed with Alzheimer's disease (AD) and healthy
-control individuals. The goal is to identify differentially expressed
-genes (DEGs) that may be associated with AD.
+Fusiform girus dokusunda Alzheimer hastalığı (AD) ile kontrol bireyleri arasında diferansiyel gen ifadesini belirlemek.
 
-## 2. Dataset
+Bu analiz, hastalığın beyin dokusunda hangi genleri etkilediğine dair bir ilk yanıt aramak için yapıldı. Sonuçlar, hastalık mekanizmasına ilişkin hipotez üretmeyi amaçlar.
 
-| Sample ID | Group | Source |
-|-----------|-------|--------|
-| SRR8482664 | Control | NCBI SRA |
-| SRR8482665 | Control | NCBI SRA |
-| SRR8482727 | AD | NCBI SRA |
-| SRR8482728 | AD | NCBI SRA |
+**Bu çalışma neyi sağlar:**
+- Hasta ve kontrol dokusu arasında gen ifadesi farkını ölçülebilir ve tekrarlanabilir hâle getirir.
+- Hangi genlerin ve biyolojik süreçlerin daha ayrıntılı incelenmeye değer olduğunu gösterir.
+- Aynı pipeline'ın daha büyük veri setlerinde kullanılabilmesi için doğrulanmış bir temel oluşturur.
 
-- Sequencing type: Single-end RNA-Seq
-- Reference genome: GRCh38 (Ensembl release 110)
+**Bu çalışma neyi sağlamaz:**
+- Genlerin hastalığa neden olduğunu kanıtlamaz.
+- Tanı ya da tedavi için kullanılamaz.
+- Genel AD popülasyonu hakkında genelleme yapmaz.
 
-## 3. Methods
+## 2. Veri
 
-The analysis was carried out through the following steps:
+- **Kaynak:** NCBI SRA, BioProject PRJNA516886 (fusiform girus RNA ekspresyonu, AD ve kontrol bireyleri).
+- **Örnekler:** 4 AD, 4 kontrol. Hepsi kadın, yaşları 77 ile 86 arasında.
+- **Okuma tipi:** Tek uçlu (single-end), Illumina HiSeq 2500.
+- **Grup tanımı:** AD örnekleri SRA kayıtlarındaki "Alzheimer hastalığı" tanısıyla doğrulandı. Kontroller aynı projeden, yaş ve cinsiyete göre eşleştirilerek seçildi.
 
-1. **Data Download**: Raw FASTQ files were downloaded from NCBI SRA.
-2. **Quality Control**: Raw read quality was assessed with FastQC.
-3. **Alignment**: Reads were aligned to the GRCh38 reference genome using
-   HISAT2, producing sorted BAM files.
-4. **Read Counting**: Gene-level read counts were computed with
-   featureCounts, using the Homo_sapiens.GRCh38.110.gtf annotation.
-5. **Differential Expression Analysis**: The DESeq2 (R/Bioconductor)
-   package was used to compare the AD and Control groups.
-6. **Gene Annotation**: Ensembl gene IDs were mapped to gene symbols using
-   AnnotationDbi/org.Hs.eg.db.
-7. **Visualization**: Volcano plot, MA plot, PCA plot, heatmap, and a bar
-   plot of the top differentially expressed genes were generated
-   (ggplot2, pheatmap).
+| Örnek | Grup | Yaş |
+|---|---|---|
+| SRR8482664 | AD | 82 |
+| SRR8482665 | AD | 77 |
+| SRR8482727 | AD | 86 |
+| SRR8482728 | AD | 86 |
+| SRR8482739 | Kontrol | 82 |
+| SRR8482631 | Kontrol | 78 |
+| SRR8482734 | Kontrol | 86 |
+| SRR8482685 | Kontrol | 85 |
 
-## 4. Results
+## 3. Yöntem
 
-The resulting differential expression table is provided in
-`Final_Results/final_results_with_symbols.csv`, while the top 20 most
-significant genes are listed in `results/Top20_DEGs.csv`.
+1. **Veri indirme:** SRA Toolkit (`prefetch`, `fasterq-dump`) ile FASTQ dosyaları alındı.
+2. **Kalite kontrol:** FastQC ile her örnek incelendi. Temel kalite ve adaptör kontrolleri geçildi. RNA-seq verisinde sık görülen aşırı temsil edilen dizi uyarıları mevcut.
+3. **Kırpma kararı:** Adaptör oranı düşük (%1-4) ve hizalama oranı yüksek olduğu için kırpma (trimming) yapılmadı. Örnekler arası tutarlılık için ya hepsi ya hiçbiri kırpılacaktı.
+4. **Hizalama:** HISAT2 2.2.2 ile GRCh38 genomuna (Ensembl 110, primary assembly) hizalandı, samtools ile sıralandı. Genel hizalama oranı %94-96.
+5. **Sayım:** featureCounts 2.0.8 ile gen düzeyinde sayım yapıldı (Ensembl 110 GTF). Toplam 62.754 gen.
+6. **Diferansiyel ifade:** DESeq2 ile tasarım `~ Group`, referans grup Kontrol. Düzeltilmiş p değeri (padj) Benjamini-Hochberg yöntemiyle hesaplandı.
+7. **Anotasyon:** Ensembl kodları org.Hs.eg.db ile gen sembollerine çevrildi.
+8. **Görselleştirme:** Volkan, MA ve barplot grafikleri (07), PCA ve ısı haritası (08) üretildi.
 
-### Visualizations
+## 4. Sonuçlar
 
-- **Volcano Plot** (`figures/Volcano_Plot.png`): Shows the relationship
-  between log2 fold change and statistical significance (adjusted
-  p-value).
-- **MA Plot** (`figures/ma_plot.png`): Shows fold change relative to mean
-  expression level.
-- **PCA Plot** (`figures/PCA.png`): Shows overall variation among samples
-  and separation between groups.
-- **Heatmap** (`figures/Heatmap.png`): Shows the expression pattern of the
-  most significant genes across samples.
-- **Top Genes Bar Plot** (`figures/top_genes_barplot.png`): Summarizes the
-  top 20 up/down-regulated genes.
+- **Anlamlı gen sayısı:** padj < 0,05 olan 59 gen.
+- **Yön dağılımı:** 49 gen AD'de daha yüksek (log2FC > 0), 10 gen kontrolde daha yüksek (log2FC < 0).
+- **İfade düzeyi:** Anlamlı genlerin medyan ortalama okuma sayısı (baseMean) 228. Hiçbiri 10'un altında değil.
+- **Fark büyüklüğü:** 59 genin 56'sında |log2FC| > 1, yani en az 2 kat fark.
+- **En anlamlı 20 gen:** `results/Top20_DEGs.csv` dosyasında, gen sembolleriyle. Bunların 18'i AD'de daha yüksek.
+- **Örnek kümelenmesi:** PCA'da gruplar PC1 ekseninde ayrışıyor (AD ortalaması −21, kontrol ortalaması +21). PC1'in yaşla korelasyonu 0,14, kütüphane büyüklüğüyle 0,29. Yani bu iki faktör ayrışmayı büyük ölçüde açıklamıyor.
 
-## 5. Limitations
+## 5. Yorum
 
-- The sample size is small (2 samples per group), which limits
-  statistical power; results should be regarded as preliminary findings.
-- Single-end sequencing was used; paired-end data could provide more
-  precise transcript-level quantification.
-- Increasing the number of biological replicates would improve the
-  reliability of the findings.
+Bulgular hipotez üretici niteliktedir. Anlamlı genlerin bir kısmı glia, damar ve stres yanıtıyla ilişkili olabilir, ancak bu bir ön değerlendirmedir ve literatürle sistematik olarak karşılaştırılmamıştır.
 
-## 6. Conclusion
+Klinik kullanım için bağımsız doğrulama ve uzman değerlendirmesi gerekir.
 
-This pilot analysis presents a workflow revealing gene expression
-differences between AD and control groups. The identified differentially
-expressed genes can be considered candidates for further research into
-the molecular mechanisms of Alzheimer's disease.
+## 6. Sınırlılıklar
 
-## 7. Recommendations and Future Work
+- **Örneklem büyüklüğü:** 4'e 4. Sonuçlar ilk bulgu olarak değerlendirilmeli, bağımsız bir veri setinde doğrulanması gerekir.
+- **Teknik değişkenler:** RIN (RNA kalitesi), ölüm sonrası süre (PMI) ve işleme grubu veri setinde yok. PC1 ayrışmasının bir kısmı teknik kaynaklı olabilir.
+- **Hücre bileşimi:** Doku bileşimindeki (nöron, glia oranı) farklar, bazı genlerin farklı çıkmasına yol açmış olabilir. Bu kontrol edilmedi.
+- **Gen düzeyi analiz:** İzoform düzeyinde analiz yapılmadı.
+- **Çoklu eşleşen okumalar:** featureCounts varsayılanına göre sayıma dahil edilmedi. Tek yere oturan okumaların oranı %75-87.
 
-The following steps are recommended to strengthen the findings of this
-pilot study and make them more biologically and clinically meaningful:
+## 7. Sonraki adımlar
 
-1. **Increase Sample Size**: Two samples per group severely limits
-   statistical power. Repeating the analysis with at least 5-6
-   biological replicates per group would improve the reliability of
-   the results.
+1. Sonuçları orijinal çalışmanın yayınlanmış gen listesiyle karşılaştırmak.
+2. Bağımsız bir AD fusiform girus veri setinde aynı genleri test etmek.
+3. Hücre bileşimini tahmin edip gen farklarıyla ilişkisini incelemek.
+4. Teknik değişkenler (RIN, PMI) için ek veri bulmak.
 
-2. **Functional Enrichment Analysis (GO/KEGG Enrichment)**: Gene Ontology
-   (GO) and KEGG pathway analysis should be performed to determine which
-   biological processes, cellular components, and molecular functions
-   the identified DEGs are involved in (e.g. using clusterProfiler or
-   enrichR packages).
+## 8. Yeniden üretme
 
-3. **Comparison with Known Alzheimer-Associated Genes**: The identified
-   DEGs should be checked for overlap with well-known Alzheimer's
-   disease genes in the literature, such as APOE, APP, PSEN1, PSEN2,
-   and MAPT.
-
-4. **Experimental Validation**: The expression differences of top genes
-   found via RNA-Seq should be validated using independent methods such
-   as qRT-PCR or Western Blot.
-
-5. **Batch Effect and Confounder Control**: As sample size increases,
-   confounding variables such as age, sex, and post-mortem interval
-   should be included in the model (added as covariates in the DESeq2
-   design formula).
-
-6. **Paired-End Sequencing**: Using paired-end sequencing in future
-   experiments would allow more accurate quantification of transcript
-   isoforms and splice variants.
-
-7. **Meta-Analysis with Public Datasets**: Performing a meta-analysis
-   with similar Alzheimer's RNA-Seq datasets available on GEO/SRA would
-   be valuable for testing the generalizability of the findings.
-
-## 8. References
-
-- Love, M.I., Huber, W., Anders, S. (2014). Moderated estimation of fold
-  change and dispersion for RNA-seq data with DESeq2. Genome Biology.
-- Kim, D., Paggi, J.M., Park, C. et al. (2019). Graph-based genome
-  alignment and genotyping with HISAT2 and HISAT-genotype. Nature
-  Biotechnology.
-- Liao, Y., Smyth, G.K., Shi, W. (2014). featureCounts: an efficient
-  general purpose program for assigning sequence reads to genomic
-  features. Bioinformatics.
-- Ensembl GRCh38 release 110, [ensembl.org](https://www.ensembl.org)
+Scriptleri 01'den 08'e sırayla çalıştır. HISAT2 index kurulumu yaklaşık 12 dakika, 8 örneğin hizalaması yaklaşık 1 saat sürdü.
