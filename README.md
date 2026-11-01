@@ -89,3 +89,7 @@ AD samples are labeled with an Alzheimer diagnosis in the SRA records. Controls 
 ## Yeniden üretme / Reproduction
 
 Scriptleri 01'den 08'e sırayla çalıştır. HISAT2 index kurulumu (03) yaklaşık 12 dakika, 8 örneğin hizalaması yaklaşık 1 saat sürdü. / Run scripts 01 to 08 in order. HISAT2 index build took about 12 minutes; alignment of all samples about 1 hour.
+## Raporlar / Reports
+
+- [Türkçe rapor](REPORT.md)
+- [English report](REPORT_en.md)
