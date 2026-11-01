@@ -71,12 +71,19 @@ AD samples are labeled with an Alzheimer diagnosis in the SRA records. Controls 
 
 ## Gereksinimler / Requirements
 
-- SRA Toolkit 3.4.1 (`prefetch`, `fasterq-dump`)
+- SRA Toolkit 3.4.1 (prefetch, fasterq-dump)
 - FastQC 0.12.1
-- HISAT2 2.2.2 (`hisat2`, `hisat2-build`)
+- HISAT2 2.2.2 (hisat2, hisat2-build)
 - samtools 1.23.1
 - Subread featureCounts 2.0.8
-- R ve paketleri / R and packages: DESeq2, AnnotationDbi, org.Hs.eg.db (3.22.0), ggplot2, pheatmap, RColorBrewer
+- R 4.5.1
+- DESeq2 1.50.2, SummarizedExperiment 1.40.0
+- AnnotationDbi 1.72.0, org.Hs.eg.db 3.22.0
+- ggplot2 4.0.3, pheatmap 1.0.13
+
+Tam paket listesi: results/sessionInfo.txt
+
+
 
 ## Yöntem notları ve sınırlılıklar / Method notes and limitations
 
