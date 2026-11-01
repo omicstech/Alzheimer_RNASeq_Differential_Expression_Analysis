@@ -1,46 +1,30 @@
-# Şekiller (figures)
+# Figures
 
-Bu klasördeki grafikler 8 örnekle yapılan analizden üretildi: 4 AD (Alzheimer hastası) ve 4 Control. Sonuçlar DESeq2 ile hesaplandı (scripts/05_deseq2_analysis.R), grafikler scripts/07_visualizations.R ve scripts/08_pca_heatmap.R ile çizildi.
+These figures were produced from 8 samples: 4 AD and 4 control.
 
-## Ortak eşikler ve okuma kuralları
-
-- **Anlamlılık:** padj < 0,05 (Benjamini-Hochberg düzeltmesi ile). padj, çok sayıda gen test edildiği için şansa bağlı yanlış pozitifleri düzelten değerdir.
-- **Fark büyüklüğü:** |log2FC| > 1, yani yaklaşık 2 kat fark.
-- **Yön:** log2FC pozitifse gen AD'de daha yüksek, negatifse Control'de daha yüksek. Referans grup Control'dür.
+**Thresholds:** padj < 0.05 (Benjamini-Hochberg); |log2FC| > 1.
+**Direction:** a positive log2FC means higher expression in AD; a negative log2FC means higher expression in control. The reference group is control.
 
 ## Volcano_Plot.png
 
-- **Ne gösterir:** Her nokta bir gen. Yatay eksen log2FC (farkın büyüklüğü ve yönü), dikey eksen -log10(padj) (kanıtın gücü; yukarı çıktıkça daha anlamlı).
-- **Renkler:** Kırmızı = AD'de yüksek ve anlamlı (49 gen). Mavi = Control'de yüksek ve anlamlı (10 gen). Gri = anlamlı değil.
-- **Çizgiler:** Dikey kesikli çizgiler log2FC = ±1. Yatay kesikli çizgi 1,3, yani padj = 0,05'in -log10 değeri.
-- **Araç:** R ggplot2 paketi.
+Each point is a gene. The x-axis shows log2FC (size and direction of change). The y-axis shows -log10(padj) (strength of evidence). Red points are higher in AD and significant (49 genes). Blue points are higher in control and significant (10 genes). Grey points are not significant. Dashed vertical lines mark log2FC = ±1; the dashed horizontal line marks padj = 0.05.
 
 ## ma_plot.png
 
-- **Ne gösterir:** Yatay eksen genin ortalama ifadesi (log10 baseMean), dikey eksen log2FC. Her nokta bir gen.
-- **Okuma:** Nokta bulutu 0 çizgisi etrafında dengeli olmalı. Düşük ifadeli genlerde yayılım daha büyük olur, bu normaldir. Yorum için yüksek ifadeli anlamlı genlere bakılır.
-- **Araç:** R ggplot2 paketi.
+The x-axis shows mean expression (log10 baseMean) and the y-axis shows log2FC. The point cloud should be centered on zero. Low-expression genes spread more widely, which is expected.
 
 ## PCA.png
 
-- **Ne gösterir:** Örneklerin genel benzerliği. Her nokta bir örnek. Analizde tüm genler değil, en çok değişen 500 gen kullanıldı.
-- **Okuma:** Aynı gruptaki örnekler yakın duruyorsa gruplar arası fark tutarlıdır. Eksen yüzdeleri (PC1, PC2) o eksenin toplam değişimin ne kadarını açıkladığını gösterir.
-- **Dikkat:** Ayrışma hastalıktan gelebileceği gibi teknik farklardan da gelebilir. Bu grafik tek başına bunu ayırt etmez.
-- **Araç:** DESeq2 (varyans dönüşümü) ve ggplot2.
+Each point is a sample, based on the 500 most variable genes. Samples from the same group should cluster together. The PC1 and PC2 percentages show how much of the total variation each axis explains. Separation may reflect disease or technical differences.
 
 ## Heatmap.png
 
-- **Ne gösterir:** En anlamlı 20 gen (en küçük padj) ve 8 örnek. Her hücrenin rengi, o genin ortalamasına göre ne kadar yüksek ya da düşük olduğunu gösterir. Kırmızı = ortalamanın üstünde, mavi = altında.
-- **Üstteki çubuk:** Örneğin grubu (AD ya da Control).
-- **Üstteki dal yapısı (dendrogram):** Örneklerin birbirine benzerliğini gösterir.
-- **Okuma:** Aynı grubun örnekleri yan yana benzer renkte ve aynı dalda olmalı.
-- **Araç:** pheatmap (R paketi).
+The top 20 significant genes across the 8 samples. Colors are relative to each gene's own mean: red is above the mean, blue is below. The top bar shows the group (AD or control). The dendrogram shows sample similarity.
 
 ## top_genes_barplot.png
 
-- **Ne gösterir:** Anlamlı genler arasından log2FC'ye göre en yüksek 10 gen (AD'de yüksek, yukarı) ve en düşük 10 gen (Control'de yüksek, aşağı). Anlamlı genlerin toplamı 59, aşağı yönlü olan 10 gen tamamı gösterilir.
-- **Araç:** R ggplot2 paketi.
+Among significant genes, the 10 with the highest log2FC (higher in AD) and the 10 with the lowest log2FC (higher in control). Only 10 significant genes are higher in control, so all of them are shown.
 
-## Yöntem notu
+## Method note
 
-Bu sonuçlar, 4'e 4 küçük bir örneklemle elde edildi. Sonuçlar bir ilk bulgu olarak okunmalı, kesin biyolojik kanıt olarak değil.
+Small sample (4 vs 4). Results should be treated as preliminary findings.
